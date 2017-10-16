@@ -28,6 +28,13 @@ class StockList(APIView):
         new_rec.save()
         return Response(request.data)
 
+    def delete(self,request):
+        data = request.data
+        request = Stock(id=data['id'])
+        request.delete()
+        stocks = Stock.objects.all()
+        serializer = StockSerializer(stocks, many=True)
+        return Response(serializer.data)
 
 
 
