@@ -25,7 +25,7 @@ SECRET_KEY = '1%$x4b(6*q+ne+p+$l8xys+ghani_shj-z8_)%a!orsq!g#96u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['4fea1585.ngrok.io']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'companies.apps.CompaniesConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'users': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'user_data',
     }
 }
 
