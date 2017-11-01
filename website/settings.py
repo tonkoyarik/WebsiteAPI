@@ -25,7 +25,7 @@ SECRET_KEY = '1%$x4b(6*q+ne+p+$l8xys+ghani_shj-z8_)%a!orsq!g#96u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['4fea1585.ngrok.io']
+ALLOWED_HOSTS = ['1a5b8c46.ngrok.io']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'companies.apps.CompaniesConfig',
+    'todo',
 
 ]
 
