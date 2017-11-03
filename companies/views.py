@@ -29,7 +29,6 @@ class StockList(APIView):
 
         except ValidationError as r:
             print (r)
-            data1 = {"messages": [{"text": str(r)},]}
             return JsonResponse({
             "messages": [
                 {"text": "%s" % r},

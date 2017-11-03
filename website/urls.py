@@ -21,5 +21,5 @@ from companies import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^stocks/', views.StockList.as_view()),
-    url(r'^todo', view.Todo.as_view()),
+    url(r'^todo/', view.Todo.as_view()),
 ]
