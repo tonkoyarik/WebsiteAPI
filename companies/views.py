@@ -41,11 +41,7 @@ class StockList(APIView):
         new_rec = Stock(ticker=validated_data['ticker'], close=validated_data['close'],
                         volume=validated_data['volume'], open=validated_data['open'])
         new_rec.save()
-        return JsonResponse({
-            "messages": [
-                {"text": "Data has been successfully saved"},
-            ]
-        })
+        return Response(serializer.data)
 
     def delete(self,request):
         data = request.data
