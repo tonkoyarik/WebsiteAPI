@@ -12,3 +12,9 @@ class StockSerializer(serializers.ModelSerializer):
         # fields  = '__all__' # will return all fields form models ( Stocck
         # )
 
+
+class TodoValidator(serializers.Serializer):
+    title = serializers.CharField(max_length=100, unique=True)  # Like a VARCHAR field
+    image_url = serializers.TextField()  # Like a TEXT field
+    subtitle = serializers.TextField(null=True)
+
