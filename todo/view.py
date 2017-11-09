@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from todo.helper import StockSerializer
+from todo.helper import StockSerializer, TodoValidator
 from django.shortcuts import render_to_response
 from todo.models import Todo
 
@@ -28,34 +28,7 @@ class TodoView(APIView):
         stocks = Todo.objects.all()
         serializer = StockSerializer(stocks, many=True)
         list_goes_here = serializer.data
-        ''' I have to change name, description and created in models.py!!!' 
-        Serializer.data have to responce the data as presented in responce1 
-        and responce2( the same keys should be presented in Responce)'''
 
-        responce1 = {
-            "title": "First todo task",
-            "image_url": "https://rockets.chatfuel.com/store/shirt",
-            "subtitle": "I will create a new item in the Todo table in my database",
-            "buttons": [
-                {
-                    "type": "web_url",
-                    "url": "https://rockets.chatfuel.com/store/shirt",
-                    "title": "View Item"
-                }
-            ],
-        }
-        responce2 = {
-            "title": "Second todo task",
-            "image_url": "https://rockets.chatfuel.com/store/shirt",
-            "subtitle": "Here is my second todo task",
-            "buttons": [
-                {
-                    "type": "web_url",
-                    "url": "https://rockets.chatfuel.com/store/shirt",
-                    "title": "View Item"
-                }
-            ],
-        }
         for i in list_goes_here:
             i['button'] = [
                 {
@@ -82,16 +55,14 @@ class TodoView(APIView):
 
 
 
-
-
     def post(self, request):
         print('*' * 50)
         data = request.data
-        serializer = StockValidator(data=data)
+        serializer = TodoValidator(data=data)
         try:
             serializer.is_valid(raise_exception=True)
 
-        except ValidationError as r:
+        except TodoValidator as r:
             print(r)
             return JsonResponse({
                 "messages": [
@@ -102,8 +73,21 @@ class TodoView(APIView):
         validated_data = serializer.data
         # print(data['hello'])
         print('*' * 50)
-        new_rec = Stock(ticker=validated_data['ticker'], close=validated_data['close'],
-                        volume=validated_data['volume'], open=validated_data['open'])
+        new_rec = Todo(title=validated_data['title'], image_url=validated_data['image_url'],
+                       subtitle=validated_data['subtitle'] )
+        '''consider to add 'button' = validated_data['button']' in order to add a Datatime field into Button section
+         We can iterate through the list and then change a 'button' value to required json string with DateTime options instead of
+        'title' in json. Example:
+        for i in new_rec:
+            url = "m.me/169536330293975?ref=Datetime" #leads to block with datatime which user enter ( the block will show the data and time once you click on the link)
+            date_time = i['button'] #new value from new_rec which user entered
+            i['button'] = [
+                {
+                    "type": "web_url",
+                    "url": url,
+                    "title": date_time
+                }
+            ]'''
         new_rec.save()
         return Response(serializer.data)
 
