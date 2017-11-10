@@ -12,6 +12,7 @@ class TodoTestCase(TestCase):
         new_rec = Todo(title='test title',
                        image_url='http://www.halo.com',
                        subtitle='subtitle1',
+                       date_time = ''
                        ).save()
 
         c = Client()
@@ -21,3 +22,10 @@ class TodoTestCase(TestCase):
         expected_button = [{'title': 'View Item', 'type': 'web_url', 'url': 'https://rockets.chatfuel.com/store/shirt'}]
         for i in res:
             self.assertEqual(i['button'],expected_button)
+
+    def test_todo_post(self):
+        new_rec = Todo(title='test title',
+                       image_url='http://www.halo.com',
+                       subtitle='subtitle1',
+                       date_time =''
+                       ).save()

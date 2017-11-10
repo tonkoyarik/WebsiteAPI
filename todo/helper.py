@@ -1,6 +1,9 @@
-from rest_framework import serializers
+from datetime import datetime
 
-from todo.models import Todo, Users
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
+from todo.models import Todo
 import json
 
 
@@ -14,10 +17,18 @@ class StockSerializer(serializers.ModelSerializer):
 
 
 class TodoValidator(serializers.Serializer):
-    title = serializers.CharField(max_length=100, unique=True)  # Like a VARCHAR field
-    image_url = serializers.CharField  # Like a TEXT field
-    subtitle = serializers.CharField(null=True)
-    button = serializers.DateTimeField()
+    title = serializers.CharField(max_length=100)  # Like a VARCHAR field
+    image_url = serializers.CharField(allow_null=True)  # Like a TEXT field
+    subtitle = serializers.CharField()
+    date_time = serializers.CharField(allow_null=True)
+
+    def validate(self, attrs):
+        if attrs.get('date_time'):
+            try:
+                dt = datetime.strptime(attrs['date_time'], "%d/%m/%y %H:%M")
+                return dt
+            except ValueError:
+                raise ValidationError
 
 #Create validators for Users here:
 '''
