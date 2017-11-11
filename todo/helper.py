@@ -11,7 +11,7 @@ class StockSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Todo
-        fields = ('title','image_url','subtitle') #(will return only title and image_url...
+        fields = ('title','image_url','subtitle','date_time') #(will return only title and image_url...
         # fields  = '__all__' # will return all fields form models ( Stocck
         # )
 
@@ -25,11 +25,11 @@ class TodoValidator(serializers.Serializer):
     def validate(self, attrs):
         if attrs.get('date_time'):
             try:
-                dt = datetime.strptime(attrs['date_time'], "%d/%m/%y %H:%M")
-                return dt
+                dt=datetime.strptime(attrs['date_time'], '%d/%m/%y %H:%M')
+                attrs['date_time']=dt
+                return attrs
             except ValueError:
-                raise ValidationError
-
+                raise serializers.ValidationError("Please enter the data in correct format")
 #Create validators for Users here:
 '''
 class UserSerializer(serializers.ModelSerializer):

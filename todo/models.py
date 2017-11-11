@@ -4,7 +4,7 @@ from rest_framework.fields import JSONField
 
 class Todo(models.Model):  # Table name, has to wrap models.Model to get the functionality of Django.
 
-    title = models.CharField(max_length=100, unique=True)  # Like a VARCHAR field
+    title = models.CharField(max_length=100,unique=True)  # Like a VARCHAR field
     image_url = models.TextField(blank=False,null=True)  # Like a TEXT field
     subtitle = models.TextField(null=True)
     date_time = models.DateTimeField()

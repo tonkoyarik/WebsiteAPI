@@ -39,6 +39,7 @@ class TodoView(APIView):
               "title": date_time
             }
             ]
+            del i['date_time']
         response = {
             "messages": [
                 {
@@ -67,7 +68,7 @@ class TodoView(APIView):
             print(r)
             return JsonResponse({
                 "messages": [
-                    {"text": "I need you to enter Title, Description and DataTime in format (dd/mm/yy 23:50)" % r},
+                    {"text": "I need you to enter Title, Description and DataTime in format (dd/mm/yy 23:50)"},
                 ]
             })
 
