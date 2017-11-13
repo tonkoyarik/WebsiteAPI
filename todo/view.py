@@ -7,26 +7,30 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from todo.helper import StockSerializer, TodoValidator
+from todo import models
+from todo.helper import StockSerializer, TodoValidator, UserValidator, UserSerializer
 from django.shortcuts import render_to_response
-from todo.models import Todo
+from todo.models import Todo, User
+
+
+class Welcome(APIView):
+    def post(self,request):
+        r = request.data
+        new_record = User(first_name = r['first name'],messenger_id = r['messenger user id'])
+        new_record.save()
+        data = User.objects.all()
+        serializer = UserSerializer(data, many=True)
+        return Response(serializer.data)
 
 
 class TodoView(APIView):
     def get(self, request):  # Define our function, accept a request
 
-        # items = tod.objects.all()  # ORM queries the database for all of the to-do entries.
-        # serializer = StockSerializer(items, many=True)
-        # data = serializer.data
-        # data1 = tod(name=data['title'], description=data['image_url'],created=data['subtitle'])
-        #
-        # for i in data:
-        #     title = i['id']
-        #     image_url = i['name']
-        #     subtitle = i['description']
-        #     buttons = i['created']
-        #     list_goes_here = {"title":title,,,}
-        stocks = Todo.objects.all()
+        data = request.GET
+        u_id = data['messenger user id']
+        user = models.User.objects.get(messenger_id=u_id)
+
+        stocks = Todo.objects.filter(reporter=user)
         serializer = StockSerializer(stocks, many=True)
         list_goes_here = serializer.data
 
@@ -61,6 +65,8 @@ class TodoView(APIView):
     def post(self, request):
         print('*' * 50)
         data = request.data
+        print(data)
+
         serializer = TodoValidator(data=data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -73,10 +79,13 @@ class TodoView(APIView):
             })
 
         validated_data = serializer.data
+        print(validated_data)
         # print(data['hello'])
         print('*' * 50)
+        u_id = data['messenger user id']
+        user = models.User.objects.get(messenger_id=u_id)
         new_rec = Todo(title=validated_data['title'], image_url=validated_data['image_url'],
-                       subtitle=validated_data['subtitle'],date_time=validated_data['date_time'])
+                       subtitle=validated_data['subtitle'],date_time=validated_data['date_time'],reporter = user)
         new_rec.save()
         return Response(serializer.data)
 
