@@ -26,13 +26,22 @@ class TodoValidator(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs.get('date_time'):
-            try:
-                dt=datetime.strptime(attrs['date_time'], '%d/%m/%y %H:%M')
-                attrs['date_time']=dt
-                return attrs
-            except ValueError:
-                raise serializers.ValidationError("Please enter the data in correct format")
+                try:
+                    dt =[datetime.strptime(attrs['date_time'], '%d/%m/%y %H:%M'),
+                    datetime.strptime(attrs['date_time'], '%m/%d/%y %H:%M'),
+                    datetime.strptime(attrs['date_time'], '%d/%m/%y %I:%M'),
+                    datetime.strptime(attrs['date_time'], '%m/%d/%y %I:%M'),
+                    datetime.strptime(attrs['date_time'], '%d/%m/%y %I:%M%p')]
 
+                    for i in dt:
+                        if i:
+                            attrs['date_time'] = i
+                            break
+                        else:
+                            continue
+                    return attrs
+                except ValueError:
+                    raise serializers.ValidationError("Please enter the data in correct format")
         # if attrs.get('messenger user id'):
         #     attrs['messenger_id'] = attrs.get('messenger user id')
 

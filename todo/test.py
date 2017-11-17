@@ -33,7 +33,7 @@ class TodoTestCase(TestCase):
         user = User(messenger_id='874323873872623',
                     first_name='Yarik')
         user.save()
-        record1 = {'title': 'title1', 'image_url': 'hello', 'subtitle': 'subtitle1', 'date_time':'14/11/17 23:50','messenger user id':'874323873872623'}
+        record1 = {'title': 'title1', 'image_url': 'hello', 'subtitle': 'subtitle1', 'date_time':'12/12/17 23:50','messenger user id':'874323873872623'}
         response = self.client.post('/todo/', record1)
 
         pprint(response)
@@ -64,7 +64,7 @@ class TodoTestCase(TestCase):
         new_rec_2 = Todo(title='test title2',
                        image_url='http://www.test2.com',
                        subtitle='subtitle2',
-                       date_time='2013-11-18 21:50',
+                       date_time='2013-11-17 23:50',
                        reporter=user2
                        ).save()
         response = self.client.get('/todo/',{'messenger user id':'28736882827648'})
