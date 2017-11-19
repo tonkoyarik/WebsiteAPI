@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^stocks/', views.StockList.as_view()),
     url(r'^todo/', view.TodoView.as_view()),
     url(r'^welcome/',view.Welcome.as_view()),
+    url(r'^delete/',view.Delete.as_view()),
 ]

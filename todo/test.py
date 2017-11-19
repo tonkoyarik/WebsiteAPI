@@ -71,3 +71,30 @@ class TodoTestCase(TestCase):
         pprint(response.data)
         response = self.client.get('/todo/',{'messenger user id':'984976237834'} )
         pprint(response.data)
+    def test_todo_delete(self):
+        user = User(messenger_id='28736882827648',
+                    first_name='Yarik')
+        user.save()
+        new_rec_1 = Todo(title='test title',
+                         image_url='http://www.halo.com',
+                         subtitle='subtitle1',
+                         date_time='2017-12-17 23:50',
+                         reporter=user
+                         ).save()
+        user2 = User(messenger_id='984976237834',
+                     first_name='Nick')
+        user2.save()
+        new_rec_2 = Todo(title='test title2',
+                         image_url='http://www.test2.com',
+                         subtitle='subtitle2',
+                         date_time='2013-11-17 23:50',
+                         reporter=user2
+                         ).save()
+        new_rec_3 = Todo(title='test title_3',
+                         image_url='http://www.test2.con',
+                         subtitle='subtitle_3',
+                         date_time='2013-12-17 23:50',
+                         reporter=user2
+                         ).save()
+        response = self.client.post('/delete/', {'messenger user id': '28736882827648','title':'test title'})
+        pprint(response.data)

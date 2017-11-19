@@ -1,5 +1,5 @@
 import json
-
+from django.db import connections, connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import serializers
@@ -11,6 +11,22 @@ from todo import models
 from todo.helper import StockSerializer, TodoValidator, UserValidator, UserSerializer
 from django.shortcuts import render_to_response
 from todo.models import Todo, User
+
+
+class Delete(APIView):
+    def post(self, request):
+        data = request.data
+        u_id = data['messenger user id']
+        title1 = data['title']
+
+        with connection.cursor() as c:
+            c.execute('''DELETE FROM todo_todo WHERE title =%s AND reporter_id = %s''',(title1,u_id))
+            c.fetchone()
+        data1 = Todo.objects.all()
+        serializer = StockSerializer(data1, many=True)
+        return Response(serializer.data)
+
+
 
 
 class Welcome(APIView):
