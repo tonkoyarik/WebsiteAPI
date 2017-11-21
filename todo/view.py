@@ -14,14 +14,14 @@ from todo.models import Todo, User
 
 
 class Delete(APIView):
-    def post(self, request):
+    def post(self, request,task_id):
         data = request.data
         u_id = data['messenger user id']
-        title1 = data['title']
 
         with connection.cursor() as c:
-            c.execute('''DELETE FROM todo_todo WHERE title =%s AND reporter_id = %s''',(title1,u_id))
-            c.fetchone()
+            # c.execute('SELECT todo_user.id FROM main.todo_user JOIN todo_todo ON todo_user.id = todo_todo.reporter_id WHERE todo_todo.id = ?',[task_id])
+            # c.fetchone()
+            c.execute('DELETE FROM todo_todo WHERE id =? ',[task_id])
         data1 = Todo.objects.all()
         serializer = StockSerializer(data1, many=True)
         return Response(serializer.data)
@@ -52,11 +52,12 @@ class TodoView(APIView):
 
         for i in list_goes_here:
             date_time = i['date_time']
+            task_id = i.pop('id')
             i['button'] = [
                 {
-              "type": "show_block",
-              "block_names": ["Datetime"],
-              "title": date_time
+              "url": "https://91927702.ngrok.io/delete/{}/".format(task_id),
+              "type":"json_plugin_url",
+              "title":"{} {}".format(date_time,'Remove'),
             }
             ]
             del i['date_time']
