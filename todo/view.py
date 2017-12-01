@@ -14,10 +14,8 @@ from todo.models import Todo, User
 
 
 class Delete(APIView):
-    def post(self, request,task_id):
-        data = request.data
-        u_id = data['messenger user id']
-
+    def get(self, request,task_id):
+        # data = request.GET['messenger user id']
         with connection.cursor() as c:
             # c.execute('SELECT todo_user.id FROM main.todo_user JOIN todo_todo ON todo_user.id = todo_todo.reporter_id WHERE todo_todo.id = ?',[task_id])
             # c.fetchone()
@@ -41,44 +39,51 @@ class Welcome(APIView):
 
 class TodoView(APIView):
     def get(self, request):  # Define our function, accept a request
-
         data = request.GET
         u_id = data['messenger user id']
         user = models.User.objects.get(messenger_id=u_id)
-
         stocks = Todo.objects.filter(reporter=user)
         serializer = StockSerializer(stocks, many=True)
         list_goes_here = serializer.data
-
+        print(list_goes_here)
         for i in list_goes_here:
-            date_time = i['date_time']
-            task_id = i.pop('id')
-            i['button'] = [
-                {
-              "url": "https://91927702.ngrok.io/delete/{}/".format(task_id),
-              "type":"json_plugin_url",
-              "title":"{} {}".format(date_time,'Remove'),
-            }
-            ]
-            del i['date_time']
-        response = {
-            "messages": [
-                {
-                    "attachment": {
-                        "type": "template",
-                        "payload": {
-                            "template_type": "list",
-                            "top_element_style": "large",
-                            "elements": list_goes_here
-                        }
+            if (len(list_goes_here) == 1) !=0:
+                print(list_goes_here)
+                date_time = i['date_time']
+                title = i['title']
+                subtitle = i['subtitle']
+                respond1 = {
+                    "messages": [
+                    {"text": "This is your first ODO Subject:{}\n:{}\n Date:{}".format(title,subtitle,date_time)}]}
+                return Response(respond1)
+            else:
+                for i in list_goes_here:
+                    i['image_url'] = 'https://paulund.co.uk/app/uploads/2016/10/todo-list.png'
+                    date_time = i['date_time']
+                    task_id = i.pop('id')
+                    i['buttons'] = [
+                        {
+                      "url": "https://6a493116.ngrok.io/delete/{}/".format(task_id),
+                      "type":"json_plugin_url",
+                      "title":"{} {}".format(date_time,'Remove'),
                     }
-                }
-            ]
-        }
-        return Response(response)
-
-
-
+                    ]
+                    del i['date_time']
+                response = {
+                        "messages": [
+                            {
+                                "attachment": {
+                                    "type": "template",
+                                    "payload": {
+                                        "template_type": "list",
+                                        "top_element_style": "large",
+                                        "elements": list_goes_here
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                return Response(response)
     def post(self, request):
         print('*' * 50)
         data = request.data

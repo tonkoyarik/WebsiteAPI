@@ -96,5 +96,5 @@ class TodoTestCase(TestCase):
                          date_time='2013-12-17 23:50',
                          reporter=user2
                          ).save()
-        response = self.client.post('/delete/', {'messenger user id': '28736882827648','title':'test title'})
-        pprint(response.data)
+        response = self.client.get('/delete/', {'messenger user id': '28736882827648','title':'test title'})
+        pprint(response)
