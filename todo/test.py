@@ -33,7 +33,7 @@ class TodoTestCase(TestCase):
         user = User(messenger_id='874323873872623',
                     first_name='Yarik')
         user.save()
-        record1 = {'title': 'title1', 'image_url': 'hello', 'subtitle': 'subtitle1', 'date_time':'12/12/17 23:50','messenger user id':'874323873872623'}
+        record1 = {'title': 'title1', 'image_url': 'hello', 'subtitle': 'subtitle1', 'date_time':'12/12/2017 23:50','messenger user id':'874323873872623'}
         response = self.client.post('/todo/', record1)
 
         pprint(response)

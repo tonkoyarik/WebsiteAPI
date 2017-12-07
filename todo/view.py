@@ -45,31 +45,32 @@ class TodoView(APIView):
         stocks = Todo.objects.filter(reporter=user)
         serializer = StockSerializer(stocks, many=True)
         list_goes_here = serializer.data
-        print(list_goes_here)
-        for i in list_goes_here:
-            if (len(list_goes_here) == 1) !=0:
-                print(list_goes_here)
-                date_time = i['date_time']
-                title = i['title']
-                subtitle = i['subtitle']
-                respond1 = {
-                    "messages": [
-                    {"text": "This is your first ODO Subject:{}\n:{}\n Date:{}".format(title,subtitle,date_time)}]}
-                return Response(respond1)
-            else:
-                for i in list_goes_here:
-                    i['image_url'] = 'https://paulund.co.uk/app/uploads/2016/10/todo-list.png'
-                    date_time = i['date_time']
-                    task_id = i.pop('id')
-                    i['buttons'] = [
-                        {
-                      "url": "https://6a493116.ngrok.io/delete/{}/".format(task_id),
-                      "type":"json_plugin_url",
-                      "title":"{} {}".format(date_time,'Remove'),
+        try:
+            for k in list_goes_here:
+                k['image_url'] = 'https://paulund.co.uk/app/uploads/2016/10/todo-list.png'
+                date_time = k['date_time']
+                title = k['title']
+                subtitle = k['subtitle']
+                k['subtitle'] = '{} , Date: {}'.format(subtitle, date_time)
+                task_id = k.pop('id')
+                k['buttons'] = [
+                    {
+                        "url": "https://a0a921c7.eu.ngrok.io/delete/{}/".format(task_id),
+                        "type": "json_plugin_url",
+                        "title": "{}".format('Remove'),
                     }
-                    ]
-                    del i['date_time']
-                response = {
+                ]
+                del k['date_time']
+
+            if (len(list_goes_here) == 1):
+                response1 = {
+                    "messages": [
+                    {"text": "This is your first TODO Subject:{}\n:{}\n Date:{}".format(title,subtitle,date_time)}]}
+                return Response(response1)
+            elif (len(list_goes_here) >= 4):
+                print('GREAAAAAT')
+                # print(list_goes_here)
+                response2 = {
                         "messages": [
                             {
                                 "attachment": {
@@ -77,13 +78,60 @@ class TodoView(APIView):
                                     "payload": {
                                         "template_type": "list",
                                         "top_element_style": "large",
-                                        "elements": list_goes_here
+                                        "elements": list_goes_here[:3]
                                     }
                                 }
+                            },{
+                                "attachment": {
+                                    "type": "template",
+                                    "payload": {
+                                        "template_type": "list",
+                                        "top_element_style": "large",
+                                        "elements": list_goes_here[3:6]
+                                    }
+                                }
+                            },{
+                            "attachment": {
+                                "type": "template",
+                                "payload": {
+                                    "template_type": "list",
+                                    "top_element_style": "large",
+                                    "elements": list_goes_here[6:9]
+                                }
                             }
-                        ]
-                    }
-                return Response(response)
+                        },{
+                            "attachment": {
+                                "type": "template",
+                                "payload": {
+                                    "template_type": "list",
+                                    "top_element_style": "large",
+                                    "elements": list_goes_here[9:11]
+                                }
+                            }}]}
+
+                print('----------------------------------------')
+                print(response2)
+                return Response(response2)
+            else:
+                response5 = {
+                    "messages": [
+                        {
+                            "attachment": {
+                                "type": "template",
+                                "payload": {
+                                    "template_type": "list",
+                                    "top_element_style": "large",
+                                    "elements": list_goes_here
+                                }
+                            }
+                        }
+                    ]
+                }
+                return Response(response5)
+        except:
+            print('not found')
+
+
     def post(self, request):
         print('*' * 50)
         data = request.data
