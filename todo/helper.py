@@ -26,7 +26,7 @@ class TodoValidator(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs.get('date_time'):
-            l = ['%d/%m/%y %H:%M', '%m/%d/%y %H:%M', '%d/%m/%y %I:%M', '%d/%m/%Y %I:%M', '%m/%d/%y %I:%M','%d/%m/%y %I:%M%p', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%d/%m/%y''%I:%M', '%H:%M', '%d-%m-%y %H:%M', '%m-%d-%y %H:%M', '%d-%m-%y %I:%M', '%d-%m-%Y %I:%M', '%m-%d-%y %I:%M','%d-%m-%y %I:%M%p', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d-%m-%y''%I:%M', '%I:%M']
+            l = ['%d/%m/%y %H:%M', '%m/%d/%y %H:%M', '%d/%m/%y %I:%M', '%d/%m/%Y %I:%M', '%m/%d/%y %I:%M','%d/%m/%y %I:%M%p', '%d/%m/%Y %H:%M', '%d/%m/%Y','%m/%d/%Y', '%d/%m/%y''%I:%M', '%H:%M', '%d-%m-%y %H:%M', '%m-%d-%y %H:%M', '%d-%m-%y %I:%M', '%d-%m-%Y %I:%M', '%m-%d-%y %I:%M','%d-%m-%y %I:%M%p', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d-%m-%y''%I:%M', '%I:%M']
             for pattern in l:
                 try:
                     dt = datetime.strptime(attrs['date_time'], pattern)

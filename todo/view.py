@@ -55,7 +55,7 @@ class TodoView(APIView):
                 task_id = k.pop('id')
                 k['buttons'] = [
                     {
-                        "url": "https://a0a921c7.eu.ngrok.io/delete/{}/".format(task_id),
+                        "url": "https://86c01a3d.eu.ngrok.io/delete/{}/".format(task_id),
                         "type": "json_plugin_url",
                         "title": "{}".format('Remove'),
                     }
@@ -67,7 +67,7 @@ class TodoView(APIView):
                     "messages": [
                     {"text": "This is your first TODO Subject:{}\n:{}\n Date:{}".format(title,subtitle,date_time)}]}
                 return Response(response1)
-            elif (len(list_goes_here) >= 4):
+            elif (len(list_goes_here) > 4):
                 print('GREAAAAAT')
                 # print(list_goes_here)
                 response2 = {
