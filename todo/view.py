@@ -19,10 +19,15 @@ class Delete(APIView):
         with connection.cursor() as c:
             # c.execute('SELECT todo_user.id FROM main.todo_user JOIN todo_todo ON todo_user.id = todo_todo.reporter_id WHERE todo_todo.id = ?',[task_id])
             # c.fetchone()
-            c.execute('DELETE FROM todo_todo WHERE id =? ',[task_id])
-        data1 = Todo.objects.all()
-        serializer = StockSerializer(data1, many=True)
-        return Response(serializer.data)
+            c.execute('DELETE FROM todo_todo WHERE id =?',(task_id, ))
+        # data1 = odo.objects.all()
+        # serializer = StockSerializer(data1, many=True)
+        responce_1 = {
+                "messages": [
+                    {"text": "Selected task has been successfully removed"},
+                ]
+            }
+        return Response(responce_1)
 
 
 
@@ -51,11 +56,11 @@ class TodoView(APIView):
                 date_time = k['date_time']
                 title = k['title']
                 subtitle = k['subtitle']
-                k['subtitle'] = '{} , Date: {}'.format(subtitle, date_time)
+                k['subtitle'] = '{} \n Date: {}'.format(subtitle, date_time)
                 task_id = k.pop('id')
                 k['buttons'] = [
                     {
-                        "url": "https://86c01a3d.eu.ngrok.io/delete/{}/".format(task_id),
+                        "url": "https://0a590de0.ngrok.io/delete/{}/".format(task_id),
                         "type": "json_plugin_url",
                         "title": "{}".format('Remove'),
                     }
@@ -157,7 +162,11 @@ class TodoView(APIView):
         new_rec = Todo(title=validated_data['title'], image_url=validated_data['image_url'],
                        subtitle=validated_data['subtitle'],date_time=validated_data['date_time'],reporter = user)
         new_rec.save()
-        return Response(serializer.data)
+        return JsonResponse({
+                "messages": [
+                    {"text": "You have successfully added a new task, let's check the list now"},
+                ]
+            })
 
     # Responds with passing the object items (contains info from the DB) to the template index.html
 
